@@ -282,16 +282,9 @@ def extract_uci_har_561(acc_xyz, gyro_xyz):
     return np.array(vals, dtype=float), names
 
 # -------------------- Flask routes -------------------- #
-@app.route('/')
+@app.route('/',methods=["GET"])
 def home():
-    # Dummy test
-    acc = [[0.0, 0.1, 9.8] for _ in range(128)]
-    gyr = [[0.01, 0.0, -0.01] for _ in range(128)]
-    X_561, _ = extract_uci_har_561(np.array(acc), np.array(gyr))
-    X_pca = pca.transform(X_561.reshape(1, -1))
-    y_pred = model.predict(X_pca)
-    label  = label_encoder.inverse_transform(y_pred)[0]
-    return f"HAR API running! Test prediction: {label}"
+    return jsonify({"message": "API is working!"})
 
 
 
