@@ -1,1 +1,6 @@
-Flask==3.0.3
+flask
+numpy
+scipy
+scikit-learn
+joblib
+huggingface_hub
