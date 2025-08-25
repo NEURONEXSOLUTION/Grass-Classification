@@ -1,22 +1,32 @@
 from flask import Flask, request, jsonify
 import numpy as np
-import joblib
+import joblib, os
+from huggingface_hub import hf_hub_download
 from scipy.signal import butter, filtfilt
 from scipy.stats import kurtosis as _kurtosis, skew as _skew, iqr
 from numpy.fft import rfft, rfftfreq
 
 app = Flask(__name__)
 
-# -------------------- Load trained artifacts -------------------- #
-model = joblib.load("svc_model.pkl")
-pca = joblib.load("pca_transform.pkl")            # trained on 561 features
-label_encoder = joblib.load("label_encoder.pkl")  # encodes activity labels
+# -------------------- Load trained artifacts from HuggingFace Hub -------------------- #
+# Replace with your repo id, e.g. "mwaqas/har-model"
+REPO_ID = "mwaqask/medical-health"
+
+# Download once & cache in /tmp/.huggingface
+model_path = hf_hub_download(repo_id=REPO_ID, filename="svc_model.pkl")
+pca_path = hf_hub_download(repo_id=REPO_ID, filename="pca_transform.pkl")
+le_path = hf_hub_download(repo_id=REPO_ID, filename="label_encoder.pkl")
+
+model = joblib.load(model_path)
+pca = joblib.load(pca_path)
+label_encoder = joblib.load(le_path)
 
 # -------------------- HAR constants -------------------- #
-FS = 50.0      # Hz (UCI HAR)
+FS = 50.0
 DT = 1.0 / FS
-FC = 0.3       # Hz (cutoff for gravity separation)
-WINDOW_N = 128 # samples per window (≈2.56s)
+FC = 0.3
+WINDOW_N = 128
+
 
 # -------------------- Helpers -------------------- #
 def safe_skew(x):
@@ -282,9 +292,16 @@ def extract_uci_har_561(acc_xyz, gyro_xyz):
     return np.array(vals, dtype=float), names
 
 # -------------------- Flask routes -------------------- #
-@app.route('/',methods=["GET"])
+@app.route('/')
 def home():
-    return jsonify({"message": "API is working!"})
+    # Dummy test
+    acc = [[0.0, 0.1, 9.8] for _ in range(128)]
+    gyr = [[0.01, 0.0, -0.01] for _ in range(128)]
+    X_561, _ = extract_uci_har_561(np.array(acc), np.array(gyr))
+    X_pca = pca.transform(X_561.reshape(1, -1))
+    y_pred = model.predict(X_pca)
+    label  = label_encoder.inverse_transform(y_pred)[0]
+    return f"HAR API running! Test prediction: {label}"
 
 
 
