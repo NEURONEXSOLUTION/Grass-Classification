@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction Result - Grass Classification AI{% endblock %}
+
+{% block content %}
+<div class="result-section">
+    <div class="result-container">
+        <div class="result-header">
+            <h1 class="result-title">Analysis Complete</h1>
+            <p class="result-subtitle">Here's what our AI model detected in your image</p>
+        </div>
+
+        <div class="result-content">
+            <div class="image-display">
+                <div class="image-container">
+                    <img src="{{ image_path }}" alt="Analyzed Image" class="result-image">
+                    <div class="image-overlay">
+                        <span class="image-label">Uploaded Image</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="prediction-results">
+                <div class="result-card {% if label == 'Green_Grass' %}green-result{% else %}dry-result{% endif %}">
+                    <div class="result-icon">
+                        {% if label == 'Green_Grass' %}
+                            <i class="fas fa-seedling"></i>
+                        {% else %}
+                            <i class="fas fa-sun"></i>
+                        {% endif %}
+                    </div>
+                    <div class="result-details">
+                        <h3 class="prediction-label">{{ label.replace('_', ' ') }}</h3>
+                        <div class="confidence-meter">
+                            <div class="confidence-label">
+                                <span>Confidence Level</span>
+                                <span class="confidence-value">{{ confidence }}%</span>
+                            </div>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: {{ confidence }}%"></div>
+                            </div>
+                        </div>
+                        <p class="result-description">
+                            {% if label == 'Green_Grass' %}
+                                The AI detected healthy, well-hydrated grass with vibrant green coloration.
+                            {% else %}
+                                The AI identified dry grass showing signs of dehydration or seasonal changes.
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="{{ url_for('index') }}" class="btn-primary">
+                        <i class="fas fa-redo"></i>
+                        Analyze Another Image
+                    </a>
+                    <button onclick="shareResults()" class="btn-secondary">
+                        <i class="fas fa-share"></i>
+                        Share Results
+                    </button>
+                </div>
+
+                <div class="technical-info">
+                    <h4>Technical Details</h4>
+                    <div class="tech-grid">
+                        <div class="tech-item">
+                            <span class="tech-label">Model:</span>
+                            <span class="tech-value">ResNet18</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-label">Input Size:</span>
+                            <span class="tech-value">224×224px</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-label">Framework:</span>
+                            <span class="tech-value">PyTorch</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-label">Backend:</span>
+                            <span class="tech-value">Flask</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

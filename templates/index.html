@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">AI-Powered Grass Classification</h1>
+        <p class="hero-subtitle">Upload an image to classify between Dry Grass and Green Grass with advanced deep learning technology</p>
+        
+        <div class="upload-container">
+            <form id="uploadForm" action="/predict" method="POST" enctype="multipart/form-data" class="upload-form">
+                <!-- File input is outside the upload area to prevent conflicts -->
+                <input type="file" id="fileInput" name="file" accept="image/*" required hidden>
+                
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <h3>Drag & Drop your image here</h3>
+                    <p>or click to browse</p>
+                    <button type="button" class="browse-btn" id="browseBtn">
+                        Browse Files
+                    </button>
+                </div>
+                
+                <div id="previewContainer" class="preview-container hidden">
+                    <img id="imagePreview" class="image-preview">
+                    <button type="button" class="remove-btn" id="removeBtn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <button type="submit" id="predictBtn" class="predict-btn hidden" disabled>
+                    <i class="fas fa-brain"></i>
+                    Analyze Image
+                </button>
+            </form>
+        </div>
+
+        <div class="features-grid" id="features">
+            <div class="feature-card">
+                <i class="fas fa-bolt"></i>
+                <h3>Fast Prediction</h3>
+                <p>Get instant results with our optimized deep learning model</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>High Accuracy</h3>
+                <p>Advanced ResNet architecture ensures reliable classifications</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-mobile-alt"></i>
+                <h3>Responsive</h3>
+                <p>Works perfectly on all devices - desktop, tablet, and mobile</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="about-section" id="about">
+    <div class="about-container">
+        <h2>About This Project</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <p>This application uses a sophisticated deep learning model based on ResNet18 architecture to classify grass images into two categories: Dry Grass and Green Grass.</p>
+                <p>The model has been trained on extensive datasets and provides confidence scores for each prediction, making it ideal for agricultural monitoring, landscaping assessment, and environmental studies.</p>
+            </div>
+            <div class="about-stats">
+                <div class="stat">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Classes</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">99%</div>
+                    <div class="stat-label">Accuracy</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Availability</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
